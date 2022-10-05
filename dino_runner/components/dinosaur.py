@@ -23,16 +23,16 @@ class Dinosaur(Sprite):
         self.dino_ducking_pos = self.Y_POS + 40
         
 
-
-    def update(self, user_imput):
+    def events(self):
         if self.dino_run:
             self.run()
         elif self.dino_jum:
             self.jump()
         elif self.dino_duck:
             self.duck()
-        
 
+    def update(self, user_imput):
+        self.events()
         if user_imput[pygame.K_UP] and not self.dino_jum:
             self.dino_jum = True
             self.dino_run = False
