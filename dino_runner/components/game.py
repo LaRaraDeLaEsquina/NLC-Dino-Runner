@@ -110,7 +110,12 @@ class Game:
             text_rect.center = (half_screen_width, half_screen_height)
             self.screen.blit(text, text_rect)
         elif self.death_count > 0:
-            pass
+            font = pygame.font.Font(FONT_STYLE, 50)
+            text = font.render("Game Over", True, (0, 0, 0))
+            text_rect = text.get_rect()
+            text_rect.center = (half_screen_width, half_screen_height)
+            self.screen.blit(text, text_rect)
+
 
         self.screen.blit(RUNNING[0], (half_screen_width-40, half_screen_height-140))
         pygame.display.update()
