@@ -1,28 +1,38 @@
 import pygame
 
- 
-from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING
+from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DEFAULT_TYPE, DUCKING_SHIELD, JUMPING_SHIELD, RUNNING_SHIELD, SHIELD_TYPE
 from pygame.sprite import Sprite
 
+DUCK_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD, }
+JUMP_IMG = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD, }
+RUN_IMG = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD, }
 
 class Dinosaur(Sprite):
     X_POS = 80
     Y_POS = 310
     JUMP_VEL = 8.5
+    Y_POS_DUCK = Y_POS + 40
 
     def __init__(self):
-        self.image = RUNNING[0]
+        self.type = DEFAULT_TYPE
+        self.image = RUN_IMG[self.type][0]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS
         self.step_index = 0
         self.dino_run = True
         self.dino_jum = False
-        #self.dino_to_jump_pos = self.Y_POS
-        self.jump_vel = self.JUMP_VEL
         self.dino_duck = False
-        self.dino_ducking_pos = self.Y_POS + 40
-        
+        self.jump_vel = self.JUMP_VEL
+        self.dino_ducking_pos = self.Y_POS_DUCK
+        self.setup_state()
+
+    def setup_state(self):
+        self.has_power_up = False
+        self.shield = False
+        self.show_text = False
+        self.shield_time_up = 0
+
 
     def events(self):
         if self.dino_run:
@@ -51,21 +61,18 @@ class Dinosaur(Sprite):
             self.step_index = 0
 
     def run(self):
-        self.image = RUNNING[0] if self.step_index < 5 else RUNNING[1]
+        self.image = RUN_IMG[self.type][self.step_index // 5]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.Y_POS
         self.step_index += 1
     
     def jump(self):
-        print("jump")
-        self.image = JUMPING
-        #self. dino_rect.y = self.dino_to_jump_pos
+        self.image = JUMP_IMG[self.type]
         if self.dino_jum:
             self.dino_rect.y -= self.jump_vel * 4
-            #print(self.dino_rect.y)
             self.jump_vel -= 0.8
-            #print(self.jump_vel)
+            
 
         if self.jump_vel < -self.JUMP_VEL:
             self.dino_rect.y = self.Y_POS
@@ -73,16 +80,17 @@ class Dinosaur(Sprite):
             self.jump_vel = self.JUMP_VEL
 
     def duck(self):
-        print("duck")
-        self.image = DUCKING[0] if self.step_index < 5 else DUCKING[1]
+        self.image = DUCK_IMG[self.type][self.step_index // 5]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = self.X_POS
         self.dino_rect.y = self.dino_ducking_pos
         self.step_index += 1
-### si rapidamente cambio de jump a duck el dinosaurio baja mucho. ¿como evito eso?
-### resuelto! fue gracias al not self.dino_jump
+
 
     def draw(self, screen: pygame.Surface):
         screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+
+    def check_invincibility(self):
+        pass
 
     
