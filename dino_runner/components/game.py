@@ -55,6 +55,7 @@ class Game:
         given_user_input = pygame.key.get_pressed()
         self.player.update(given_user_input)
         self.obstacle_manager.update(self)
+        self.power_up_manager.update(self.points, self.game_speed, self.player )
 
     def update_score(self):
         self.points += 1
@@ -111,7 +112,7 @@ class Game:
         elif self.death_count > 0:
             pass
 
-        self.screen.blit(RUNNING[0], (half_screen_width-20, half_screen_height-140))
+        self.screen.blit(RUNNING[0], (half_screen_width-40, half_screen_height-140))
         pygame.display.update()
         self.handle_key_events_on_menu()
 

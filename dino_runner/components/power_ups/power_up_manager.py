@@ -9,7 +9,7 @@ class PowerUpManager:
 
     def generate_power_ups(self, points):
         if len(self.power_ups) == 0:
-            if self.when_appers == points:
+            if self.when_appears == points:
                 self.when_appears = random.randint(self.when_appears * 200, self.when_appears * 300)
                 self.power_ups.append(Shield())
 
