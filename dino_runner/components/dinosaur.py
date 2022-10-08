@@ -1,6 +1,8 @@
 import pygame
 
 from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DEFAULT_TYPE, DUCKING_SHIELD, JUMPING_SHIELD, RUNNING_SHIELD, SHIELD_TYPE, RUNNING_HAMMER, JUMPING_HAMMER, DUCKING_HAMMER, HAMMER_TYPE
+#from dino_runner.components.game import FONT_STYLE
+# no me permite importar dado a un 'circular import'
 from pygame.sprite import Sprite
 
 DUCK_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER}
@@ -13,6 +15,7 @@ class Dinosaur(Sprite):
     Y_POS = 310
     JUMP_VEL = 8.5
     Y_POS_DUCK = Y_POS + 40
+    FONT_STYLE = 'freesansbold.ttf'
 
     def __init__(self):
         self.type = DEFAULT_TYPE
@@ -94,15 +97,18 @@ class Dinosaur(Sprite):
 
     def check_invincibility(self, screen):
         if self.shield == True:
-            time_to_show = round((self.shield_time_up - pygame.time.get_ticks()) / 100, 2)
+            time_to_show = int((self.shield_time_up - pygame.time.get_ticks()) / 100)
             if time_to_show >= 0 and self.show_text:
-                # mostrar este tiempo en el juego
+                font = pygame.font.Font(self.FONT_STYLE, 30)
+                text = font.render(f"Booster timer: {time_to_show} s", True, (0, 0, 0))
+                text_rect = text.get_rect()
+                text_rect.center = (400,50)
+                screen.blit(text, text_rect) 
+                #print(time_to_show)
 
-                print(time_to_show)
             else:
                 self.shield = False
                 self.type = DEFAULT_TYPE
-
 
 
     
