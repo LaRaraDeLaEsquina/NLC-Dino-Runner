@@ -1,8 +1,9 @@
+from email.mime import image
 import pygame
-
-from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DEFAULT_TYPE, DUCKING_SHIELD, JUMPING_SHIELD, RUNNING_SHIELD, SHIELD_TYPE, RUNNING_HAMMER, JUMPING_HAMMER, DUCKING_HAMMER, HAMMER_TYPE
+from dino_runner.utils.constants import HAMMER, RUNNING, JUMPING, DUCKING, DEFAULT_TYPE, DUCKING_SHIELD, JUMPING_SHIELD, RUNNING_SHIELD, SHIELD_TYPE, RUNNING_HAMMER, JUMPING_HAMMER, DUCKING_HAMMER, HAMMER_TYPE
 #from dino_runner.components.game import FONT_STYLE
 # no me permite importar dado a un 'circular import'
+from dino_runner.components.power_ups.hammer import Hammer
 from pygame.sprite import Sprite
 
 DUCK_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER}
@@ -16,6 +17,7 @@ class Dinosaur(Sprite):
     JUMP_VEL = 8.5
     Y_POS_DUCK = Y_POS + 40
     FONT_STYLE = 'freesansbold.ttf'
+    HAMMER_VEL = 8
 
     def __init__(self):
         self.type = DEFAULT_TYPE
@@ -29,11 +31,24 @@ class Dinosaur(Sprite):
         self.dino_duck = False
         self.jump_vel = self.JUMP_VEL
         self.dino_ducking_pos = self.Y_POS_DUCK
+        
+        self.image_hammer = HAMMER
+        self.hammer_rect = self.image_hammer.get_rect()
+        self.hammer_rect.x = self.dino_rect.x
+        self.hammer_rect.y = self.dino_rect.y
+        self.hammer_throw = False
+       
+        self.hammer_vel = self.HAMMER_VEL
+
+        
+        
+        #self.when_hammer_throw_position.y = 
         self.setup_state()
 
     def setup_state(self):
         self.has_power_up = False
         self.shield = False
+        self.hammer = False
 
         self.show_text = False
         self.shield_time_up = 0
@@ -46,6 +61,9 @@ class Dinosaur(Sprite):
             self.jump()
         elif self.dino_duck:
             self.duck()
+
+        elif self.hammer_throw == True:
+            self.check_hammer()
 
     def update(self, user_imput):
         self.events()
@@ -61,6 +79,11 @@ class Dinosaur(Sprite):
             self.dino_jum = False
             self.dino_run = True
             self.dino_duck = False
+
+        elif user_imput[pygame.K_SPACE]:
+            print("key pressed")
+            self.hammer_throw = True
+
 
         if self.step_index >= 10:
             self.step_index = 0
@@ -94,6 +117,20 @@ class Dinosaur(Sprite):
 
     def draw(self, screen: pygame.Surface):
         screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+            
+
+    def check_hammer(self, screen):
+        if self.hammer_throw == True:
+            self.hammer_rect.x += self.hammer_vel * 4
+            self.hammer_vel += 0.8
+            screen.blit(self.image_hammer, (self.hammer_rect.x, self.hammer_rect.y))
+            self.type = DEFAULT_TYPE
+            self.image = RUN_IMG[self.type]
+            print("is throwing?")
+            self.hammer_throw = False
+            self.hammer = False
+
+
 
     def check_invincibility(self, screen):
         if self.shield == True:
@@ -109,6 +146,4 @@ class Dinosaur(Sprite):
             else:
                 self.shield = False
                 self.type = DEFAULT_TYPE
-
-
     

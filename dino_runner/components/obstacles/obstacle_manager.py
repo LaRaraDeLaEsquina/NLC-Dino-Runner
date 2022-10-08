@@ -22,8 +22,14 @@ class ObstacleManager:
                     pygame.time.delay(500)
                     game.playing = False
                     game.death_count += 1
+                #elif game.player.shield == True:
                 else:
                     self.obstacles.remove(obstacle)
+
+            #elif game.player.hammer_rect.colliderect(obstacle.rect):
+             #   if game.player.hammer:
+              #      self.obstacles.remove(obstacle)
+
             break
             
 

@@ -76,6 +76,8 @@ class Game:
         self.draw_score()
         self.player.draw(self.screen)
         self.player.check_invincibility(self.screen)
+        
+        self.player.check_hammer(self.screen)
         self.obstacle_manager.draw(self.screen)
         self.power_up_manager.draw(self.screen)
         pygame.display.update()
