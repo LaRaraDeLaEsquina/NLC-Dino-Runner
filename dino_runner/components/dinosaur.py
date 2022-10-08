@@ -92,7 +92,17 @@ class Dinosaur(Sprite):
     def draw(self, screen: pygame.Surface):
         screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
 
-    def check_invincibility(self):
-        pass
+    def check_invincibility(self, screen):
+        if self.shield == True:
+            time_to_show = round((self.shield_time_up - pygame.time.get_ticks()) / 100, 2)
+            if time_to_show >= 0 and self.show_text:
+                # mostrar este tiempo en el juego
+
+                print(time_to_show)
+            else:
+                self.shield = False
+                self.type = DEFAULT_TYPE
+
+
 
     
